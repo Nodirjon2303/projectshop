@@ -63,15 +63,29 @@ class Order(BaseModel):
     is_ordered = models.BooleanField(default=False, verbose_name="Buyurtma berildimi")
     is_paid = models.BooleanField(default=False, verbose_name="To'langanmi")
     payment_method = models.CharField(max_length=255, verbose_name="To'lov usuli", choices=PaymentChoice.choices)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Foydalanuvchi")
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Foydalanuvchi", null=True)
 
     def __str__(self):
         return self.first_name
-
 
     class Meta:
         verbose_name = "Buyurtma"
         verbose_name_plural = "Buyurtmalar"
         db_table = "order"
         ordering = ["-created_at"]
+
+
+class OrderProduct(BaseModel):
+    order = models.ForeignKey(Order, on_delete=models.PROTECT, null=True)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, verbose_name='mahsulot nomi')
+    quantity = models.SmallIntegerField(default=1, verbose_name='quantity')
+    price = models.BigIntegerField(verbose_name='narxi', null=True)
+
+    def save(self, *arg, **kwargs):
+        if not self.pk:
+            self.price = self.product.price
+        super(OrderProduct, self).save(arg, kwargs)
+
+    class Meta:
+        verbose_name = 'Savatcha mahsulot'
+        verbose_name_plural = 'Savatchadagi mahsulotlaar'

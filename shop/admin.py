@@ -4,7 +4,7 @@ from datetime import datetime
 
 from django.utils.html import format_html
 
-from .models import Product, Category, Order
+from .models import Product, Category, Order, OrderProduct
 
 
 # Register your models here.
@@ -25,7 +25,6 @@ class ProductAdmin(admin.ModelAdmin):
         return format_html('<img style="width:40%; height:40%" src="{}" />'.format(obj.image_url))
 
 
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'is_active', 'image_tag']
@@ -41,7 +40,6 @@ class CategoryAdmin(admin.ModelAdmin):
         return format_html('<img style="width:40%; height:40%" src="{}" />'.format(obj.image.url))
 
 
-
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'phone', 'city', 'country', 'payment_method', 'created_at']
@@ -51,3 +49,19 @@ class OrderAdmin(admin.ModelAdmin):
     list_per_page = 10
     search_help_text = "Qidirayotgan buyurtmangiz nomini yoki telefon raqamingizni kiriting"
 
+
+@admin.register(OrderProduct)
+class OrderProductAdmin(admin.ModelAdmin):
+    list_display = ['product', 'quantity', 'price', 'total_price']
+    search_help_text = 'mahsulot nomi bo\'yicha izlang'
+    search_fields = ['product__name']
+    readonly_fields = ('product_price', 'total_price', 'price')
+
+    def total_price(self, obj):
+        if obj.pk:
+            return obj.quantity * obj.price
+        else:
+            return '-'
+
+    def product_price(self, obj):
+        return obj.product.price
