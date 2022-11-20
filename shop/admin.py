@@ -59,7 +59,11 @@ class OrderProductAdmin(admin.ModelAdmin):
 
     def total_price(self, obj):
         if obj.pk:
-            return obj.quantity * obj.price
+            try:
+                return obj.quantity * obj.price
+            except Exception as e:
+                return 'x'
+
         else:
             return '-'
 

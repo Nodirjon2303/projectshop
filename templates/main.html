@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+
+<h2>HTML Table</h2>
+<a href="{% url 'add-product' %}">Mahsulot qo'shish</a>
+<table>
+    <tr>
+        <th>id</th>
+        <th>Category</th>
+        <th>Category active</th>
+        <th>Product name</th>
+        <th>Price</th>
+        <th>stock</th>
+        <th>image</th>
+    </tr>
+    {% for i in products %}
+        <tr>
+            <td><a href="{% url 'product-detail' i.id %}">{{ forloop.counter }}</a></td>
+            <td>{{ i.category.name }}</td>
+            <td>{{ i.category.is_active }}</td>
+            <td>{{ i.name }}</td>
+            <td>{{ i.price }}</td>
+            <td>{{ i.stock }}</td>
+            {% if i.image_url %}
+                <td><a href="{{ i.image_url }}"><img src="{{ i.image_url }}" style="width: 50px;height: 50px" alt="">
+                </a></td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+
+        </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>

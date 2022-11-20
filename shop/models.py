@@ -31,7 +31,7 @@ class Product(BaseModel):
     name = models.CharField(max_length=100)
     price = models.FloatField()
     stock = models.IntegerField()
-    image_url = models.CharField(max_length=203)
+    image_url = models.URLField(max_length=203)
 
     def __str__(self):
         return self.name
